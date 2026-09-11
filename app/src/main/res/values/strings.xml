@@ -622,6 +622,12 @@
         Enable this to have a small area in the bottom of the screen
         where you can open the buffer list normally.</string>
 
+    <string name="pref__buffer_list__catch_whois_to_active_buffer">
+        Catch whois response to active window</string>
+    <string name="pref__buffer_list__catch_whois_to_active_buffer_summary">
+        If a /whois reply does not land in an existing private buffer,
+        show it as a banner over whichever buffer you currently have open</string>
+
     <!-- ####################################################################################### -->
     <!-- #################################### look and feel #################################### -->
     <!-- ####################################################################################### -->

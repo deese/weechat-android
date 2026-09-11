@@ -101,6 +101,8 @@ public class Constants {
     final public static boolean PREF_SHOW_BUFFER_FILTER_D = true;
     public static final String PREF_USE_GESTURE_EXCLUSION_ZONE = "use_gesture_exclusion_zone";
     final public static boolean PREF_USE_GESTURE_EXCLUSION_ZONE_D = true;
+    public static final String PREF_CATCH_WHOIS_TO_ACTIVE_BUFFER = "catch_whois_to_active_buffer";
+    final public static boolean PREF_CATCH_WHOIS_TO_ACTIVE_BUFFER_D = false;
 
     // look & feel
     final static public String PREF_LOOKFEEL_GROUP = "lookfeel_group";

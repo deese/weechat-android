@@ -112,6 +112,7 @@ public class P implements SharedPreferences.OnSharedPreferenceChangeListener{
     public static boolean hideHiddenBuffers;
     public static boolean optimizeTraffic;
     public static boolean useGestureExclusionZone;
+    public static boolean catchWhoisToActiveBuffer;
     public static boolean filterLines, autoHideActionbar;
     public static int maxWidth;
     public static boolean encloseNick, dimDownNonHumanLines;
@@ -166,6 +167,8 @@ public class P implements SharedPreferences.OnSharedPreferenceChangeListener{
         optimizeTraffic = p.getBoolean(PREF_OPTIMIZE_TRAFFIC, PREF_OPTIMIZE_TRAFFIC_D);  // okay this is out of sync with onChanged stuff—used for the bell icon
         useGestureExclusionZone = p.getBoolean(PREF_USE_GESTURE_EXCLUSION_ZONE,
                 Constants.PREF_USE_GESTURE_EXCLUSION_ZONE_D);
+        catchWhoisToActiveBuffer = p.getBoolean(PREF_CATCH_WHOIS_TO_ACTIVE_BUFFER,
+                PREF_CATCH_WHOIS_TO_ACTIVE_BUFFER_D);
 
         // buffer-wide preferences
         filterLines = p.getBoolean(PREF_FILTER_LINES, PREF_FILTER_LINES_D);
@@ -338,6 +341,7 @@ public class P implements SharedPreferences.OnSharedPreferenceChangeListener{
             case PREF_HIDE_HIDDEN_BUFFERS: hideHiddenBuffers = p.getBoolean(key, PREF_HIDE_HIDDEN_BUFFERS_D); break;
             case PREF_AUTO_HIDE_ACTIONBAR: autoHideActionbar = p.getBoolean(key, PREF_AUTO_HIDE_ACTIONBAR_D); break;
             case PREF_USE_GESTURE_EXCLUSION_ZONE: useGestureExclusionZone = p.getBoolean(key, PREF_USE_GESTURE_EXCLUSION_ZONE_D); break;
+            case PREF_CATCH_WHOIS_TO_ACTIVE_BUFFER: catchWhoisToActiveBuffer = p.getBoolean(key, PREF_CATCH_WHOIS_TO_ACTIVE_BUFFER_D); break;
 
             // buffer-wide preferences
             case PREF_FILTER_LINES:

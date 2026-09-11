@@ -8,6 +8,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import com.ubergeek42.WeechatAndroid.notifications.Hotlist
 import com.ubergeek42.WeechatAndroid.service.Events.SendMessageEvent
+import com.ubergeek42.WeechatAndroid.service.Events.WhoisCaughtEvent
 import com.ubergeek42.WeechatAndroid.service.P
 import com.ubergeek42.cats.Kitty
 import com.ubergeek42.cats.Root
@@ -154,6 +155,31 @@ object BufferList {
     /////////////////////////////////////////////////////////////////////// default message handlers
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////// catching whois lines
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // accumulates whois reply lines per target buffer pointer until "irc_318" (end of whois) is seen,
+    // at which point the combined text is shown as a snackbar over whatever buffer is currently open.
+    // this assumes weechat's irc plugin tags whois numerics as "irc_<code>"; not verified live.
+    private val pendingWhoisText = ConcurrentHashMap<Long, StringBuilder>()
+
+    private fun catchWhoisLine(bufferPointer: Long, spec: LineSpec, line: Line) {
+        val tags = spec.tags ?: return
+
+        if ("irc_311" in tags) pendingWhoisText[bufferPointer] = StringBuilder()
+        val accumulated = pendingWhoisText.getOrPut(bufferPointer) { StringBuilder() }
+        if (accumulated.isNotEmpty()) accumulated.append("\n")
+        accumulated.append(line.ircLikeString)
+
+        if ("irc_318" in tags) {
+            pendingWhoisText.remove(bufferPointer)
+            buffers.firstOrNull { it.isWatchedByKey("main-activity") }?.let { watchedBuffer ->
+                WhoisCaughtEvent.fire(watchedBuffer.pointer, accumulated.toString())
+            }
+        }
+    }
 
     private val defaultMessageHandlers = setupDefaultMessageHandlers()
 
@@ -380,8 +406,16 @@ object BufferList {
             obj.forEach { entry ->
                 val spec = LineSpec(entry)
                 findByPointer(spec.bufferPointer)?.let { buffer ->
-                    buffer.addLineBottom(spec.toLine())
+                    val line = spec.toLine()
+                    buffer.addLineBottom(line)
                     buffer.onLineAdded()
+
+                    if (P.catchWhoisToActiveBuffer &&
+                            buffer.type != BufferSpec.Type.Private &&
+                            !buffer.isWatchedByKey("main-activity") &&
+                            spec.isWhoisReply) {
+                        catchWhoisLine(buffer.pointer, spec, line)
+                    }
                 }
             }
         }

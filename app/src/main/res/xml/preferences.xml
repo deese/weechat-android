@@ -228,6 +228,11 @@
             android:title="@string/pref__buffer_list__use_gesture_exclusion_zone"
             android:summary="@string/pref__buffer_list__use_gesture_exclusion_zone_summary"
             android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="catch_whois_to_active_buffer"
+            android:title="@string/pref__buffer_list__catch_whois_to_active_buffer"
+            android:summary="@string/pref__buffer_list__catch_whois_to_active_buffer_summary"
+            android:defaultValue="false" />
     </PreferenceScreen>
 
     <!-- look and feel -->

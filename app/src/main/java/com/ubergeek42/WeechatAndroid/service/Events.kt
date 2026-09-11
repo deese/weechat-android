@@ -15,6 +15,16 @@ class Events {
 
     data class ExceptionEvent(@JvmField val e: Exception)
 
+    // fired when a whois reply is caught landing outside of an existing private buffer,
+    // so it can be shown as a banner over whatever buffer is currently on screen
+    data class WhoisCaughtEvent(@JvmField val bufferPointer: Long, @JvmField val text: CharSequence) {
+        companion object {
+            fun fire(bufferPointer: Long, text: CharSequence) {
+                EventBus.getDefault().post(WhoisCaughtEvent(bufferPointer, text))
+            }
+        }
+    }
+
     data class SendMessageEvent(@JvmField val message: String) {
         companion object {
             fun fire(message: String) {

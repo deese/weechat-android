@@ -48,6 +48,7 @@ import com.ubergeek42.WeechatAndroid.search.Search
 import com.ubergeek42.WeechatAndroid.search.SearchConfig
 import com.ubergeek42.WeechatAndroid.service.Events.SendMessageEvent
 import com.ubergeek42.WeechatAndroid.service.Events.StateChangedEvent
+import com.ubergeek42.WeechatAndroid.service.Events.WhoisCaughtEvent
 import com.ubergeek42.WeechatAndroid.service.P
 import com.ubergeek42.WeechatAndroid.service.RelayService
 import com.ubergeek42.WeechatAndroid.tabcomplete.TabCompleter
@@ -367,6 +368,11 @@ class BufferFragment : Fragment(), BufferEye {
         this.connectedToRelay = connectedToRelay
 
         adjustConnectivityIndications(connectivityChanged)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @MainThread fun onEvent(event: WhoisCaughtEvent) {
+        if (event.bufferPointer == pointer) showSnackbar(event.text)
     }
 
     ////////////////////////////////////////////////////////////////////////////////// attach detach

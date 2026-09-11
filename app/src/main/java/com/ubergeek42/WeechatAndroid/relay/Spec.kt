@@ -168,7 +168,16 @@ class HotlistSpec(entry: HdataEntry) {
 
     inline val tags: Array<String>? get() = entry.getStringArrayOrNull("tags_array")
 
+    // standard RFC 1459/2812 WHOIS numeric replies, as tagged by weechat's irc plugin (irc_<code>).
+    // not verified against a live weechat instance—if this stops matching, check the actual tags
+    // of a whois reply line (e.g. via a debug/tags script) and adjust this set.
+    val isWhoisReply: Boolean get() = tags?.any { it in WHOIS_REPLY_TAGS } == true
+
     companion object {
+        private val WHOIS_REPLY_TAGS = setOf(
+                "irc_301", "irc_311", "irc_312", "irc_313", "irc_317", "irc_318",
+                "irc_319", "irc_320", "irc_330", "irc_338", "irc_378", "irc_379", "irc_671")
+
         fun makeLastLinesRequest(id: String, pointer: Long, numberOfLines: Int) =
                 "($id) hdata buffer:${pointer.as0x}/own_lines/last_line(-$numberOfLines)/data " +
                 "id,date,displayed,prefix,message,highlight,notify,tags_array"
