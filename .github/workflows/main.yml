@@ -46,12 +46,15 @@ jobs:
           sed -i "s/versionCode.*/versionCode = $versionCode/" app/build.gradle.kts
           echo Using version code: $versionCode
 
+      - name: Write dev keystore
+        run: echo "${{secrets.DEVSTORE_B64}}" | base64 -d > releases/weechat-dev-local.jks
+
       - name: Build dev release
         run: ./releases/travis_build.sh
         env:
           DEVKEYPASSWORD: ${{secrets.DEVKEYPASSWORD}}
           DEVSTOREPASSWORD: ${{secrets.DEVSTOREPASSWORD}}
-          DEVSTOREFILE: /home/runner/work/weechat-android/weechat-android/releases/android.jks
+          DEVSTOREFILE: /home/runner/work/weechat-android/weechat-android/releases/weechat-dev-local.jks
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
