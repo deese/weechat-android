@@ -372,7 +372,12 @@ class BufferFragment : Fragment(), BufferEye {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @MainThread fun onEvent(event: WhoisCaughtEvent) {
-        if (event.bufferPointer == pointer) showSnackbar(event.text)
+        if (event.bufferPointer != pointer) return
+
+        showSnackbar(event.text) {
+            duration = com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
+            view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)?.maxLines = 12
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////// attach detach
